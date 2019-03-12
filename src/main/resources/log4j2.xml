@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <!-- PROPERTIES -->
+    <Properties>
+        <Property name="name">consumer</Property>
+        <Property name="logPath">logs/</Property>
+        <Property name="pattern">[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</Property>
+    </Properties>
+
+    <!-- APPENDER -->
+    <Appenders>
+
+        <!-- Console -->
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="${pattern}"/>
+        </Console>
+
+        <!-- File -->
+        <RollingFile name="File" fileName="${logPath}${name}.log"
+                     filePattern="${logPath}/${name}-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="43200" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="1000MB"/>
+
+            </Policies>
+            <DefaultRolloverStrategy max="40"/>
+        </RollingFile>
+    </Appenders>
+
+    <!-- LOGGERS -->
+    <Loggers>
+        <root level="warn">
+            <appender-ref ref="STDOUT"/>
+        </root>
+
+        <logger name="com.kafka" level="trace">
+            <appender-ref ref="File"/>
+        </logger>
+    </Loggers>
+</Configuration>
